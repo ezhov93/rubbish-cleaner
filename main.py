@@ -45,15 +45,8 @@ class Delete(metaclass=SingletonMeta):
         self.cntOfFiles += 1
         self.cntOfTotal += 1
 
-    def print(self):
-        print("Files deleted:\t\t\t" + "{:6d}".format(self.cntOfFiles))
-        print("Directories deleted:\t\t" + "{:6d}".format(self.cntOfDirs))
-        print("Empty directories deleted: \t" +
-              "{:6d}".format(self.cntOfEmptyDirs))
-        print("Total objects deleted:\t\t" + "{:6d}".format(self.cntOfTotal))
 
-
-class Cleaner(object):
+class IgnoreCleaner(object):
     def __init__(self, path):
         self.Path = path
 
@@ -63,7 +56,7 @@ class Cleaner(object):
             print("Opening '" + IgnoreFile + "'...")
             masks = self.__masksFromFile(IgnoreFile)
         except FileNotFoundError:
-            sys.exit("[error] " + IgnoreFile + "doesn't exist")
+            sys.exit("[failed] " + IgnoreFile + "doesn't exist")
         print("Loading masks...")
         print("Cleaning rubbish...")
         delete = Delete()
@@ -78,6 +71,8 @@ class Cleaner(object):
                 delete.emptyDir(absoluteName)
             if self.__checkMatch(absoluteName, masks):
                 delete.dir(absoluteName)
+
+        print("[  ok  ] " + self.Path + "is clean")
 
     def __masksFromFile(self, fileName):
         masksFile = open(fileName, 'r')
@@ -109,11 +104,15 @@ def main():
         for name in files:
             absoluteName = os.path.join(root, name)
             if name == IgnoreFile:
-                cleaner = Cleaner(root)
+                cleaner = IgnoreCleaner(root)
                 cleaner.exec()
         if not dirs and not files:
             delete.emptyDir(root)
-    delete.print()
+    print("Files deleted:\t\t\t" + "{:6d}".format(self.cntOfFiles))
+    print("Directories deleted:\t\t" + "{:6d}".format(self.cntOfDirs))
+    print("Empty directories deleted: \t" +
+          "{:6d}".format(self.cntOfEmptyDirs))
+    print("Total objects deleted:\t\t" + "{:6d}".format(self.cntOfTotal))
     return 0
 
 

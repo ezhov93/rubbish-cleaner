@@ -79,7 +79,7 @@ class IgnoreCleaner(object):
         masks = []
         for line in masksFile:
             ch1 = line[0]
-            if ch1 != '#':
+            if ch1 != '#' and ch1 != '!':
                 if ch1 == '/' or ch1 == '\\':
                     line = '*' + line
                 masks.append(line.rstrip())
